@@ -17,7 +17,7 @@ def songs(num):
     content = site.read()
     site.close()
 
-    pattern = '<td class="timeStamp dim txtMini">(.*?)</td>.*?<td class="broadcast txtMini" width="90%">(.*?)</td>'
+    pattern = '<td class="timeStamp dim txtMini">(.*?)</td>.*?<td class="broadcast txtMini" width="90%">.*?<span>(.*?)</span>.*?</td>'
     songs = re.finditer(pattern, content, re.DOTALL)
 
     for s in range(0, num):
