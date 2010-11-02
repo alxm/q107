@@ -1,0 +1,34 @@
+#!/usr/bin/python
+
+"""
+By Alex Margarit 2010
+Displays a list of the recently played songs on Y108 FM.
+Usage: y108 [numSongs]
+
+This script is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+"""
+
+import sys, re, urllib
+
+def songs(num):
+    site = urllib.urlopen("http://www.y108.ca/NowPlaying/Songs.aspx")
+    content = site.read()
+    site.close()
+
+    pattern = '<td class="timeStamp dim txtMini">(.*?)</td>.*?<td class="broadcast txtMini" width="90%">.*?<span>(.*?)</span>.*?</td>'
+    songs = re.finditer(pattern, content, re.DOTALL)
+
+    for s in range(0, num):
+        try:
+            song = songs.next()
+            print "%8s %s" % (song.group(1).strip(), song.group(2).strip())
+        except StopIteration:
+            break
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        songs(int(sys.argv[1]))
+    else:
+        songs(5)
