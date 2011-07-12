@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
     Displays a list of the recently played songs on Q107 FM.
@@ -20,22 +20,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys, re, urllib
+import sys, re
+
+if sys.version_info[0] > 2:
+    from urllib.request import urlopen
+else:
+    from urllib import urlopen
 
 def songs(num):
-    site = urllib.urlopen("http://www.q107.com/BroadcastHistory.aspx")
+    site = urlopen("http://www.q107.com/BroadcastHistory.aspx")
     content = site.read()
     site.close()
 
-    pattern = '<td class="timeStamp dim txtMini">(.*?)</td>.*?<td class="broadcast txtMini" width="90%">.*?<span>(.*?)</span>.*?</td>'
+    pattern = b'<td class="timeStamp dim txtMini">(.*?)</td>.*?<td class="broadcast txtMini" width="90%">.*?<span>(.*?)</span>.*?</td>'
     songs = re.finditer(pattern, content, re.DOTALL)
 
-    for s in range(0, num):
-        try:
-            song = songs.next()
-            print "%8s %s" % (song.group(1).strip(), song.group(2).strip())
-        except StopIteration:
+    count = 0
+
+    for s in songs:
+        count += 1
+
+        if count > num:
             break
+
+        time = s.group(1).strip().rjust(8).decode()
+        song = s.group(2).strip().decode()
+
+        print(time + " " + song)
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
