@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-    Displays a list of the recently played songs on Q107 FM.
+    Displays a list of the recently played songs on Y108 FM.
     Usage: y108 [numSongs]
 
     Copyright 2010 Alex Margarit
